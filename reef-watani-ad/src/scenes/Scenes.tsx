@@ -1,7 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Easing, Sequence, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Easing, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {C, FONT_DISPLAY, XF} from '../theme';
-import {CLIPS} from '../assets';
+import {CLIPS, PHOTOS} from '../assets';
 import {Grade, Headline, Logo, SceneFade, Shot} from '../components';
 
 const ease = Easing.bezier(0.22, 1, 0.36, 1);
@@ -78,44 +78,73 @@ export const Scene2: React.FC = () => {
   );
 };
 
-/** 13–23 ث: تنوع الأحجام (ثلاث لقطات مقسومة ثم لقطة واسعة) + «خيارات تناسب الأفراد والمشاريع» */
+/** بطاقة صورة لشتلة */
+const PhotoCard: React.FC<{src: string; delay: number; w: number; h: number}> = ({src, delay, w, h}) => {
+  const frame = useCurrentFrame();
+  const t = interpolate(frame, [delay, delay + 26], [0, 1], {...clamp, easing: ease});
+  return (
+    <div
+      style={{
+        width: w,
+        height: h,
+        borderRadius: 30,
+        overflow: 'hidden',
+        border: `6px solid ${C.beige}`,
+        boxShadow: '0 30px 60px rgba(0,0,0,0.35)',
+        opacity: t,
+        transform: `translateY(${(1 - t) * 80}px) scale(${0.94 + t * 0.06})`,
+        flexShrink: 0,
+      }}
+    >
+      <Img src={staticFile(src)} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+    </div>
+  );
+};
+
+/** 13–23 ث: تنوع الشتلات (بطاقات صور في عمودين متحركين) + «خيارات تناسب الأفراد والمشاريع» */
 export const Scene3: React.FC = () => {
   const frame = useCurrentFrame();
-  const splitEnd = 180;
-  const bandH = 1920 / 3;
-  const splitOut = interpolate(frame, [splitEnd - 6, splitEnd + XF], [1, 0], clamp);
+  const {durationInFrames} = useVideoConfig();
+  const p = interpolate(frame, [0, durationInFrames], [0, 1], clamp);
+  const cw = 420;
+  const ch = 860;
+  const gap = 36;
+  const col = (items: string[], offset: number, speed: number, delay0: number) => (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap,
+        transform: `translateY(${offset - p * speed}px)`,
+      }}
+    >
+      {items.map((src, i) => (
+        <PhotoCard key={src} src={src} delay={delay0 + i * 40} w={cw} h={ch} />
+      ))}
+    </div>
+  );
   return (
     <SceneFade>
-      <Sequence from={splitEnd - 6} layout="none">
-        <AbsoluteFill>
-          <Shot clip={CLIPS.variety[3]} seed={23} zoom={[1.16, 1.04]} />
-        </AbsoluteFill>
-      </Sequence>
-      <AbsoluteFill style={{opacity: splitOut, background: C.beige}}>
-        {CLIPS.variety.slice(0, 3).map((clip, i) => {
-          const t = interpolate(frame, [i * 14, i * 14 + 28], [0, 1], {...clamp, easing: ease});
-          return (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                top: i * bandH + (i > 0 ? 4 : 0),
-                height: bandH - (i > 0 ? 4 : 0),
-                left: 0,
-                right: 0,
-                overflow: 'hidden',
-                clipPath: `inset(0 0 0 ${(1 - t) * 100}%)`,
-              }}
-            >
-              <div style={{position: 'absolute', top: -bandH, height: 1920, left: 0, right: 0}}>
-                <Shot clip={clip} seed={20 + i} zoom={[1.05 + i * 0.03, 1.12 + i * 0.03]} />
-              </div>
-            </div>
-          );
-        })}
+      <AbsoluteFill style={{filter: 'blur(28px) saturate(0.8)', transform: 'scale(1.15)'}}>
+        <Shot clip={CLIPS.varietyBg} seed={20} zoom={[1, 1.05]} />
       </AbsoluteFill>
-      <Grade bottom={0.9} />
-      <Headline text="خيارات تناسب|الأفراد والمشاريع" delay={40} size={80} />
+      <AbsoluteFill style={{background: 'rgba(15,36,25,0.55)'}} />
+      <AbsoluteFill
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          gap,
+          height: 1330,
+          overflow: 'hidden',
+          maskImage: 'linear-gradient(180deg, transparent 0%, #000 8%, #000 80%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, #000 8%, #000 80%, transparent 100%)',
+        }}
+      >
+        {col([PHOTOS[0], PHOTOS[2]], 60, 460, 4)}
+        {col([PHOTOS[1], PHOTOS[3]], -260, 200, 18)}
+      </AbsoluteFill>
+      <Grade bottom={0.95} />
+      <Headline text="خيارات تناسب|الأفراد والمشاريع" delay={40} size={80} bottom={250} />
     </SceneFade>
   );
 };

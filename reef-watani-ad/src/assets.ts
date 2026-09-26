@@ -9,6 +9,8 @@ export type Clip = {
   brief: string;
   /** ثانية البداية داخل ملف الفيديو */
   startFrom?: number;
+  /** سرعة التشغيل (1 = طبيعية) */
+  playbackRate?: number;
 };
 
 export const LOGO: string | null = null; // مثال: 'brand/logo.png' (يفضل PNG شفاف)
@@ -20,24 +22,23 @@ export const AUDIO = {
 };
 
 export const CLIPS = {
-  // 0–5 ث
-  sprout: {src: null, brief: 'لقطة ماكرو قريبة لشتلة صغيرة تخرج من التربة'} as Clip,
-  // 5–13 ث
-  rows: [
-    {src: null, brief: 'حركة كاميرا بطيئة على صفوف الشتلات داخل المشتل'},
-    {src: null, brief: 'لقطة جانبية لصفوف أشجار الزينة في الأصص'},
-    {src: null, brief: 'لقطة علوية لصفوف الأشجار البرية'},
-  ] as Clip[],
-  // 13–23 ث
-  variety: [
-    {src: null, brief: 'شتلة صغيرة في كيس زراعي'},
-    {src: null, brief: 'شجرة زينة متوسطة الحجم'},
-    {src: null, brief: 'شجرة برية كبيرة جاهزة للمشاريع'},
-    {src: null, brief: 'لقطة واسعة تجمع أحجامًا مختلفة'},
-  ] as Clip[],
-  // 23–30 ث
+  // 0–5 ث: لقطة قريبة للشتلات في أكياسها (مبطّأة بالاستيفاء الحركي)
+  sprout: {src: 'footage/sprout-closeup.mp4', brief: 'لقطة ماكرو قريبة لشتلة صغيرة'} as Clip,
+  // 5–13 ث: جولة بين صفوف الشتلات
+  rows: [{src: 'footage/rows-walk.mp4', brief: 'حركة كاميرا بطيئة على صفوف الشتلات'}] as Clip[],
+  // 13–23 ث: خلفية مشهد التنوع (تظهر مموّهة خلف الصور)
+  varietyBg: {src: 'footage/rows-walk.mp4', brief: 'صفوف الشتلات', playbackRate: 0.8} as Clip,
+  // 23–30 ث: الشتلات في أكياسها جاهزة للتجهيز والتوريد
   prep: [
-    {src: null, brief: 'يد تفحص أوراق الشتلة وجذورها'},
-    {src: null, brief: 'تجهيز الشتلات وترتيبها للتحميل والتوريد'},
+    {src: 'footage/rows-wide.mp4', brief: 'صفوف الشتلات في أكياسها', startFrom: 0.6},
+    {src: 'footage/prep-closeup.mp4', brief: 'لقطة قريبة للشتلات الجاهزة'},
   ] as Clip[],
 };
+
+// صور الشتلات الفردية لمشهد التنوع (13–23 ث)
+export const PHOTOS: string[] = [
+  'photos/sapling-1.jpg',
+  'photos/sapling-2.jpg',
+  'photos/sapling-3.jpg',
+  'photos/sapling-4.jpg',
+];

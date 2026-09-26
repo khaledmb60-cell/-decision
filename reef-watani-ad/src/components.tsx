@@ -115,6 +115,7 @@ export const Shot: React.FC<{
           <OffthreadVideo
             src={staticFile(clip.src)}
             muted
+            playbackRate={clip.playbackRate ?? 1}
             startFrom={Math.round((clip.startFrom ?? 0) * fps)}
             style={{width: '100%', height: '100%', objectFit: 'cover'}}
           />
