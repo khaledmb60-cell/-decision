@@ -16,7 +16,7 @@ export type Clip = {
 export const LOGO: string | null = null; // مثال: 'brand/logo.png' (يفضل PNG شفاف)
 
 export const AUDIO = {
-  voiceover: null as string | null, // مثال: 'audio/voiceover.mp3'
+  voiceover: 'audio/voiceover.wav' as string | null, // صوت اصطناعي مؤقت؛ استبدله بتسجيل معلّق حقيقي
   music: 'audio/music.wav' as string | null,
   ambience: 'audio/ambience.wav' as string | null,
 };

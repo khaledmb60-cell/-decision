@@ -42,7 +42,8 @@ export const ReefWataniAd: React.FC = () => {
         <Audio
           src={staticFile(AUDIO.ambience)}
           volume={(f) =>
-            0.22 * interpolate(f, [0, 30, DURATION - 45, DURATION], [0, 1, 1, 0], {
+            (AUDIO.voiceover ? 0.14 : 0.22) *
+            interpolate(f, [0, 30, DURATION - 45, DURATION], [0, 1, 1, 0], {
               extrapolateLeft: 'clamp',
               extrapolateRight: 'clamp',
             })
@@ -50,7 +51,7 @@ export const ReefWataniAd: React.FC = () => {
         />
       )}
       {AUDIO.voiceover && (
-        <Sequence from={Math.round(0.6 * FPS)}>
+        <Sequence from={0}>
           <Audio src={staticFile(AUDIO.voiceover)} volume={1} />
         </Sequence>
       )}
