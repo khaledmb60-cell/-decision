@@ -1,0 +1,24 @@
+{
+  "name": "reef-watani-ad",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "audio": "python3 scripts/make_audio.py",
+    "render": "remotion render src/index.ts ReefWataniAd out/reef-watani-ad.mp4 --codec h264 --crf 18",
+    "still": "remotion still src/index.ts ReefWataniAd out/frame.png"
+  },
+  "dependencies": {
+    "@fontsource/el-messiri": "^5.3.0",
+    "@fontsource/tajawal": "^5.3.0",
+    "@remotion/cli": "^4.0.529",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.529"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "typescript": "^7.0.2"
+  }
+}
